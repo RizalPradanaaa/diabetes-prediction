@@ -2,19 +2,11 @@
 
 A Flask web app to predict diabetes in a patient using Random Forest ML model.
 
-## Table of contents
-
-- [About](#about)
-- [Experimental Setup](#experimental-setup)
-- [Screenshots](#screenshots)
-
 ## About
 
 - Diabetes can be controlled if it is predicted earlier. Hence, this project aims to perform early prediction of Diabetes in a patient by applying various Machine Learning Techniques.
 - These techniques provide better results for prediction by constructing models from datasets containing various information about different people.
 - Algorithms used were: K-Nearest Neighbor (KNN), Logistic Regression (LR), Decision Tree (DT), Support Vector Machine (SVM), Naïve Bayes(NB), and Random Forest (RF).
-- The accuracy for each model was calculated.
-- Results showed that SVM achieved higher accuracy compared to other machine learning techniques hence, it is used for prediction in the web application.
 
 ## Experimental Setup
 
