@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+body {
+  background: -webkit-linear-gradient(left, #ff3c3c, #ffa2a2);
+  font-family: "Inter", sans-serif;
+}
+.contact-form {
+  background: #fff;
+  margin-top: 10%;
+  margin-bottom: 3%;
+}
+.contact-form .form-control {
+  border-radius: 1rem;
+}
+.contact-image {
+  text-align: center;
+}
+.contact-image img {
+  border-radius: 6rem;
+  width: 13%;
+  margin-top: -7.5%;
+}
+.contact-form form {
+  padding: 14%;
+  padding-bottom: 5%;
+}
+
+.contact-form h1 {
+  margin-bottom: 5%;
+  margin-top: -15%;
+  text-align: center;
+  color: #000;
+}

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diabetes Detection</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container contact-form rounded-4">
+      <div class="contact-image">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Gambar" />
+      </div>
+      <form action="" method="POST">
+        <h1 class="fw-semibold">Deteksi Dini Penyakit Diabetes</h1>
+        <div class="row">
+          <div class="col-xl-1"></div>
+          <div class="col-xl-10">
+            <div class="text-center">
+              {% if prediction != -1 %} {% if prediction == 0 %}
+              <div
+                class="alert alert-success alert-dismissible fade show"
+                role="alert"
+              >
+                <strong>Kecil kemungkinan</strong> bagi pasien untuk menderita
+                diabetes!
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"
+                ></button>
+              </div>
+              {% else %}
+              <div
+                class="alert alert-danger alert-dismissible fade show"
+                role="alert"
+              >
+                <strong>Kemungkinan besar</strong> pasien
+                sudah atau akan menderita diabetes
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"
+                ></button>
+              </div>
+              {% endif %} {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="section" id="section-a">
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="nama" class="form-label">Nama Lengkap</label>
+                <input
+                  type="text"
+                  id="nama"
+                  name="nama"
+                  class="form-control"
+                  placeholder="Masukkan nama lengkap"
+                  value="{{ nama if nama else '' }}"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="tanggal_lahir" class="form-label"
+                  >Tanggal Lahir</label
+                >
+                <input
+                  type="date"
+                  id="tanggal_lahir"
+                  name="tanggal_lahir"
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="kota" class="form-label">Kabupaten / Kota </label>
+                <input
+                  type="text"
+                  id="kota"
+                  name="kota"
+                  class="form-control"
+                  placeholder="Masukkan kabupaten / kota"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="tempat_tinggal" class="form-label"
+                  >Tempat tinggal?</label
+                >
+                <select
+                  name="tempat_tinggal"
+                  id="tempat_tinggal"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="kota">Kota</option>
+                  <option value="desa">Desa</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="pendidikan" class="form-label"
+                  >Pendidikan Terakhir?</label
+                >
+                <select
+                  name="pendidikan"
+                  id="tempat_tinggal"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="sd">SD</option>
+                  <option value="smp">SMP</option>
+                  <option value="smk/sma">SMA/SMK</option>
+                  <option value="s1">S1</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="bekerja" class="form-label">Apakah Bekerja</label>
+                <select
+                  name="bekerja"
+                  id="tempat_tinggal"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="0">Tidak</option>
+                  <option value="1">Bekerja</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="sayur" class="form-label"
+                  >Apakah sering makan sayur?</label
+                >
+                <select
+                  name="sayur"
+                  id="sayur"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="0">Tidak</option>
+                  <option value="1">Ya</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="buah" class="form-label"
+                  >Apakah sering makan buah?</label
+                >
+                <select
+                  name="buah"
+                  id="buah"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="0">Tidak</option>
+                  <option value="1">Ya</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="makan_manis" class="form-label"
+                  >Apakah sering makan / minum manis?</label
+                >
+                <select
+                  name="makan_manis"
+                  id="makan_manis"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="0">Tidak</option>
+                  <option value="1">Ya</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="olahraga" class="form-label"
+                  >Apakah sering olahraga?</label
+                >
+                <select
+                  name="olahraga"
+                  id="olahraga"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="0">Tidak</option>
+                  <option value="1">Ya</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row d-flex justify-content-between mb-5 mt-3">
+            <div class="col-6"></div>
+            <div class="col-6 text-end">
+              <button
+                type="button"
+                class="btn btn-danger rounded-pill px-4 py-2 fw-bold next"
+              >
+                Selanjutnya
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="section-b" style="display: none">
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="age" class="form-label">Berapakah Umur Anda?</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  id="age"
+                  name="age"
+                  class="form-control"
+                  placeholder="Masukkan umur anda"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="gender" class="form-label"
+                  >Apa Jenis kelamin Anda?</label
+                >
+                <select
+                  name="gender"
+                  id="gender"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih jenis kelamin</option>
+                  <option value="1">Laki - Laki</option>
+                  <option value="2">Perempuan</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="bmi" class="form-label"
+                  >Berapakah indeks masa tubuh anda (BMI)?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="bmi"
+                  name="bmi"
+                  class="form-control"
+                  placeholder="Masukkan indeks masa tubuh anda"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="sbp" class="form-label"
+                  >Berapakah tekanan darah sistolik anda?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="sbp"
+                  name="sbp"
+                  class="form-control"
+                  placeholder="Masukkan tekanan darah sistolik"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="dbp" class="form-label"
+                  >Berapakah tekanan darah diastolik anda?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="dbp"
+                  name="dbp"
+                  class="form-control"
+                  placeholder="Masukkan tekanan darah diastolik"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="fpg" class="form-label"
+                  >Berapakah hasil cek glukosa puasa anda?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="fpg"
+                  name="fpg"
+                  class="form-control"
+                  placeholder="Masukkan hasil cek glukosa puasa anda"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="ffpg" class="form-label"
+                  >Berapakah hasil cek akhir glukosa puasa anda?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="ffpg"
+                  name="ffpg"
+                  class="form-control"
+                  placeholder="Masukkan hasil cek akhir glukosa puasa anda"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="chol" class="form-label"
+                  >Berapakah kolestrol anda?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="chol"
+                  name="chol"
+                  class="form-control"
+                  placeholder="Masukkan kolestrol anda"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row d-flex justify-content-between mb-5 mt-3">
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-secondary rounded-pill px-4 py-2 fw-bold prev"
+              >
+                Sebelumnya
+              </button>
+            </div>
+            <div class="col-6 text-end">
+              <button
+                type="button"
+                class="btn btn-danger rounded-pill px-4 py-2 fw-bold next"
+              >
+                Selanjutnya
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="section-c" style="display: none">
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="tri" class="form-label"
+                  >Berapakah hasil cek triglyceride?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="tri"
+                  name="tri"
+                  class="form-control"
+                  placeholder="Masukkan hasil cek triglyceride"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="hdl" class="form-label"
+                  >Berapakah kolesterol HDL (high-density lipoprotein)?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="hdl"
+                  name="hdl"
+                  class="form-control"
+                  placeholder="Masukkan Kolesterol HDL (high-density lipoprotein) anda"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="ldl" class="form-label"
+                  >Berapakah kolesterol LDL (low-density lipoprotein)?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="ldl"
+                  name="ldl"
+                  class="form-control"
+                  placeholder="Masukkan Kolesterol HDL (low-density lipoprotein) anda"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="alt" class="form-label"
+                  >Berapakah Transaminase alanina anda?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="alt"
+                  name="alt"
+                  class="form-control"
+                  placeholder="Masukkan transaminase alanina anda"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="bun" class="form-label"
+                  >Berapakah hasil tes nitrogen urea darah anda?</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  id="bun"
+                  name="bun"
+                  class="form-control"
+                  placeholder="Masukkan hasil tes nitrogen urea darah anda?"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="ccr" class="form-label"
+                  >Berapakah hasil tes creatinine clearance anda
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  id="ccr"
+                  name="ccr"
+                  class="form-control"
+                  placeholder="Masukkan hasil creatinine clearance anda"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="smoking" class="form-label"
+                  >Apakah anda merokok?</label
+                >
+                <select
+                  name="smoking"
+                  id="smoking"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="1">Merokok</option>
+                  <option value="2">Pernah merokok</option>
+                  <option value="3">Tidak pernah merokok</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="drinking" class="form-label"
+                  >Apakah anda minum minuman keras?</label
+                >
+                <select
+                  name="drinking"
+                  id="drinking"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="1">Minum</option>
+                  <option value="2">Pernah minum</option>
+                  <option value="3">Tidak pernah minum</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6">
+              <div class="form-group mb-2 fw-semibold">
+                <label for="family_history" class="form-label"
+                  >Apakah keluarga anda, ada yang pernah diabetes?</label
+                >
+                <select
+                  name="family_history"
+                  id="family_history"
+                  class="form-select form-select-md mb-3 rounded-4"
+                  aria-label="Large select example"
+                >
+                  <option>Pilih status</option>
+                  <option value="1">Ada</option>
+                  <option value="0">Tidak ada</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row d-flex justify-content-between mb-5 mt-3">
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-secondary rounded-pill px-4 py-2 fw-bold prev"
+              >
+                Sebelumnya
+              </button>
+            </div>
+            <div class="col-6 text-end">
+              <button
+                type="submit"
+                class="btn btn-danger rounded-pill px-4 py-2 fw-bold shadow"
+              >
+                Deteksi
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const sections = document.querySelectorAll(".section");
+        const prevButtons = document.querySelectorAll(".prev");
+        const nextButtons = document.querySelectorAll(".next");
+        const form = document.querySelector("form");
+
+        let currentSection = 0;
+
+        // Fungsi untuk menampilkan bagian saat ini
+        function showSection(index) {
+          sections.forEach((section, idx) => {
+            section.style.display = idx === index ? "block" : "none";
+          });
+        }
+
+        // Tampilkan bagian pertama saat memuat halaman
+        showSection(currentSection);
+
+        // Fungsi untuk memeriksa apakah semua input diisi
+        function isSectionComplete(section) {
+          const inputs = section.querySelectorAll("input, select");
+          for (const input of inputs) {
+            if (
+              input.value === "" ||
+              input.value === "Pilih jenis kelamin" ||
+              input.value === "Pilih status"
+            ) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        // Handler untuk tombol "Previous"
+        prevButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            if (currentSection > 0) {
+              currentSection--;
+              showSection(currentSection);
+            }
+          });
+        });
+
+        // Handler untuk tombol "Next"
+        nextButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            if (isSectionComplete(sections[currentSection])) {
+              if (currentSection < sections.length - 1) {
+                currentSection++;
+                showSection(currentSection);
+              }
+            } else {
+              alert("Semua field harus diisi sebelum melanjutkan.");
+            }
+          });
+        });
+
+        // Handler untuk tombol "Deteksi"
+        form.addEventListener("submit", function (event) {
+          if (!isSectionComplete(sections[currentSection])) {
+            event.preventDefault();
+            alert("Semua field harus diisi sebelum mengirimkan.");
+          }
+        });
+      });
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
